@@ -281,119 +281,301 @@ function initEN() {
     updateEN();
 }
 
-// ====== COPY TO CLIPBOARD ======
+// ====== COPY TO CLIPBOARD (Rich HTML for Outlook) ======
+
+// Inline style constants for email compatibility
+const EMAIL_STYLES = {
+    wrapper: 'font-family: Georgia, "Times New Roman", serif; font-size: 15px; color: #1e293b; line-height: 1.75; max-width: 700px;',
+    paragraph: 'margin: 0 0 14px 0; font-family: Georgia, "Times New Roman", serif; font-size: 15px; color: #1e293b; line-height: 1.75;',
+    strong: 'font-weight: 700; color: #1a2332;',
+    link: 'color: #2563eb; text-decoration: none;',
+    bannerBase: 'margin: 16px 0; padding: 14px 18px; border-radius: 6px; font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; line-height: 1.6;',
+    bannerNonref: 'background-color: #eff6ff; border-left: 4px solid #2563eb; color: #1e40af;',
+    bannerFlex: 'background-color: #f0fdf4; border-left: 4px solid #059669; color: #065f46;',
+    bannerCorporate: 'background-color: #fefce8; border-left: 4px solid #d97706; color: #92400e;',
+    commission: 'margin: 16px 0; padding: 12px 16px; background-color: #fef9f0; border: 1px dashed rgba(200,165,90,0.4); border-radius: 6px; font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; color: #475569;',
+    table: 'width: 100%; border-collapse: collapse; margin: 20px 0; font-family: "Segoe UI", Arial, sans-serif; font-size: 14px;',
+    th: 'background-color: #1a2332; color: #ffffff; font-weight: 600; padding: 12px 16px; text-align: left; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid #1a2332;',
+    td: 'padding: 12px 16px; border: 1px solid #e2e8f0; vertical-align: middle; color: #1e293b;',
+    tdAlt: 'padding: 12px 16px; border: 1px solid #e2e8f0; vertical-align: middle; color: #1e293b; background-color: #f8fafc;',
+    tdName: 'font-weight: 600; color: #1e293b;',
+    m2Badge: 'display: inline-block; background-color: #eff6ff; color: #1e40af; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;',
+    priceValue: 'font-weight: 700; color: #a88a3e; font-size: 15px;',
+    priceSuffix: 'color: #64748b; font-size: 13px;',
+    lounge: 'margin: 20px 0; padding: 16px 20px; background-color: #fef9f0; border: 1px solid rgba(200,165,90,0.2); border-radius: 8px; font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; color: #1e293b; line-height: 1.6;',
+    loungeStrong: 'color: #a88a3e; font-weight: 700;',
+    dangerText: 'color: #dc2626; font-weight: 700;',
+    infoItem: 'margin: 0 0 8px 0; padding: 4px 0 4px 20px; font-family: Georgia, "Times New Roman", serif; font-size: 14px; color: #1e293b; line-height: 1.6;',
+    bullet: 'color: #c8a55a; margin-right: 8px;'
+};
+
 function initCopyButtons() {
-    // TR Copy
     const trCopyBtn = document.getElementById('trCopyBtn');
     if (trCopyBtn) {
         trCopyBtn.addEventListener('click', () => {
             const proposalEl = document.getElementById('tr-proposal');
-            copyProposalText(proposalEl, trCopyBtn, 'Teklif metni kopyalandı!');
+            copyAsRichHTML(proposalEl, trCopyBtn, 'Teklif metni kopyalandı!');
         });
     }
-
-    // EN Copy
     const enCopyBtn = document.getElementById('enCopyBtn');
     if (enCopyBtn) {
         enCopyBtn.addEventListener('click', () => {
             const proposalEl = document.getElementById('en-proposal');
-            copyProposalText(proposalEl, enCopyBtn, 'Offer text copied!');
+            copyAsRichHTML(proposalEl, enCopyBtn, 'Offer text copied!');
         });
     }
 }
 
-function copyProposalText(el, btn, successMsg) {
-    if (!el) return;
+function copyAsRichHTML(proposalEl, btn, successMsg) {
+    if (!proposalEl) return;
 
-    // Get text content with proper formatting
-    const text = extractFormattedText(el);
+    const emailHTML = generateEmailHTML(proposalEl);
+    const plainText = proposalEl.innerText;
 
-    navigator.clipboard.writeText(text).then(() => {
-        // Visual feedback
-        const originalHTML = btn.innerHTML;
-        btn.classList.add('copied');
-        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg> <span>Kopyalandı!</span>`;
+    // Modern Clipboard API — writes both HTML and plain text
+    if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+        const htmlBlob = new Blob([emailHTML], { type: 'text/html' });
+        const textBlob = new Blob([plainText], { type: 'text/plain' });
 
-        showToast(successMsg, 'success');
-
-        setTimeout(() => {
-            btn.classList.remove('copied');
-            btn.innerHTML = originalHTML;
-        }, 2000);
-    }).catch(() => {
-        showToast('Kopyalama başarısız oldu', 'error');
-    });
-}
-
-function extractFormattedText(el) {
-    let text = '';
-    const children = el.childNodes;
-
-    children.forEach(node => {
-        if (node.nodeType === Node.TEXT_NODE) {
-            text += node.textContent;
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            const tag = node.tagName.toLowerCase();
-            const classList = node.classList;
-
-            // Skip hidden info banners
-            if (classList.contains('info-banner') && !classList.contains('visible')) {
-                return;
-            }
-
-            if (tag === 'p' || tag === 'div') {
-                text += extractInnerText(node) + '\n\n';
-            } else if (tag === 'table') {
-                text += extractTableText(node) + '\n\n';
-            } else if (tag === 'hr') {
-                text += '─'.repeat(40) + '\n\n';
-            } else {
-                text += extractInnerText(node);
-            }
-        }
-    });
-
-    return text.trim();
-}
-
-function extractInnerText(el) {
-    let text = '';
-    el.childNodes.forEach(node => {
-        if (node.nodeType === Node.TEXT_NODE) {
-            text += node.textContent;
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            if (node.tagName === 'BR') {
-                text += '\n';
-            } else if (node.tagName === 'A') {
-                text += node.textContent + ' (' + node.href + ')';
-            } else {
-                text += extractInnerText(node);
-            }
-        }
-    });
-    return text;
-}
-
-function extractTableText(table) {
-    let text = '';
-    const rows = table.querySelectorAll('tr');
-    rows.forEach((row, idx) => {
-        const cells = row.querySelectorAll('th, td');
-        const cellTexts = [];
-        cells.forEach(cell => {
-            // For price cells, just get the price value and EUR suffix
-            const priceVal = cell.querySelector('.price-value');
-            if (priceVal) {
-                const suffix = cell.querySelector('.price-suffix');
-                cellTexts.push(priceVal.textContent + ' ' + (suffix ? suffix.textContent : ''));
-            } else {
-                cellTexts.push(cell.textContent.trim());
-            }
+        navigator.clipboard.write([
+            new ClipboardItem({
+                'text/html': htmlBlob,
+                'text/plain': textBlob
+            })
+        ]).then(() => {
+            showCopySuccess(btn, successMsg);
+        }).catch(() => {
+            fallbackRichCopy(emailHTML, btn, successMsg);
         });
-        text += cellTexts.join('  |  ') + '\n';
-        if (idx === 0) {
-            text += '─'.repeat(60) + '\n';
+    } else {
+        fallbackRichCopy(emailHTML, btn, successMsg);
+    }
+}
+
+// Fallback: use a hidden div + execCommand to preserve rich formatting
+function fallbackRichCopy(html, btn, successMsg) {
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    temp.style.cssText = 'position:fixed; left:-9999px; top:0; opacity:0;';
+    document.body.appendChild(temp);
+
+    const range = document.createRange();
+    range.selectNodeContents(temp);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    try {
+        document.execCommand('copy');
+        showCopySuccess(btn, successMsg);
+    } catch (e) {
+        showToast('Kopyalama başarısız oldu', 'error');
+    }
+
+    sel.removeAllRanges();
+    document.body.removeChild(temp);
+}
+
+function showCopySuccess(btn, successMsg) {
+    const originalHTML = btn.innerHTML;
+    btn.classList.add('copied');
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><polyline points="20 6 9 17 4 12"/></svg> <span>Kopyalandı!</span>`;
+    showToast(successMsg, 'success');
+    setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = originalHTML;
+    }, 2000);
+}
+
+// ====== EMAIL HTML GENERATOR ======
+function generateEmailHTML(proposalEl) {
+    let html = `<div style="${EMAIL_STYLES.wrapper}">`;
+
+    const children = proposalEl.children;
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        const cl = child.classList;
+
+        // Skip hidden info banners
+        if (cl.contains('info-banner') && !cl.contains('visible')) continue;
+
+        if (child.tagName === 'P') {
+            html += renderParagraph(child);
+        } else if (cl.contains('info-banner')) {
+            html += renderBanner(child);
+        } else if (cl.contains('commission-note')) {
+            html += renderCommission(child);
+        } else if (child.tagName === 'TABLE') {
+            html += renderTable(child);
+        } else if (cl.contains('lounge-info')) {
+            html += renderLounge(child);
+        } else if (cl.contains('info-item')) {
+            html += renderInfoItem(child);
         }
-    });
-    return text;
+    }
+
+    html += '</div>';
+    return html;
+}
+
+function renderParagraph(el) {
+    return `<p style="${EMAIL_STYLES.paragraph}">${renderInline(el)}</p>`;
+}
+
+function renderInline(el) {
+    let html = '';
+    for (const node of el.childNodes) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            html += escapeHTML(node.textContent);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            const tag = node.tagName;
+            if (tag === 'SPAN') {
+                const cl = node.classList;
+                if (cl.contains('dynamic-value') || cl.contains('price-value')) {
+                    html += `<strong style="${EMAIL_STYLES.strong}">${escapeHTML(node.textContent)}</strong>`;
+                } else if (cl.contains('price-suffix')) {
+                    html += `<span style="${EMAIL_STYLES.priceSuffix}">${escapeHTML(node.textContent)}</span>`;
+                } else if (cl.contains('m2-badge')) {
+                    html += `<span style="${EMAIL_STYLES.m2Badge}">${escapeHTML(node.textContent)}</span>`;
+                } else {
+                    html += renderInline(node);
+                }
+            } else if (tag === 'STRONG' || tag === 'B') {
+                const inlineColor = node.style.color;
+                let style = EMAIL_STYLES.strong;
+                if (inlineColor) style += ` color: ${inlineColor};`;
+                html += `<strong style="${style}">${renderInline(node)}</strong>`;
+            } else if (tag === 'A') {
+                html += `<a href="${node.href}" style="${EMAIL_STYLES.link}">${escapeHTML(node.textContent)}</a>`;
+            } else if (tag === 'BR') {
+                html += '<br>';
+            } else {
+                html += renderInline(node);
+            }
+        }
+    }
+    return html;
+}
+
+function renderBanner(el) {
+    let typeStyle = '';
+    if (el.classList.contains('nonref')) typeStyle = EMAIL_STYLES.bannerNonref;
+    else if (el.classList.contains('flex')) typeStyle = EMAIL_STYLES.bannerFlex;
+    else if (el.classList.contains('corporate')) typeStyle = EMAIL_STYLES.bannerCorporate;
+    return `<div style="${EMAIL_STYLES.bannerBase} ${typeStyle}">${renderInline(el)}</div>`;
+}
+
+function renderCommission(el) {
+    return `<div style="${EMAIL_STYLES.commission}">${renderInline(el)}</div>`;
+}
+
+function renderTable(tableEl) {
+    let html = `<table style="${EMAIL_STYLES.table}" cellpadding="0" cellspacing="0">`;
+
+    // Thead
+    const thead = tableEl.querySelector('thead');
+    if (thead) {
+        html += '<thead>';
+        for (const row of thead.rows) {
+            html += '<tr>';
+            for (const cell of row.cells) {
+                html += `<th style="${EMAIL_STYLES.th}">${escapeHTML(cell.textContent)}</th>`;
+            }
+            html += '</tr>';
+        }
+        html += '</thead>';
+    }
+
+    // Tbody
+    const tbody = tableEl.querySelector('tbody');
+    if (tbody) {
+        html += '<tbody>';
+        for (let r = 0; r < tbody.rows.length; r++) {
+            const row = tbody.rows[r];
+            const isAlt = r % 2 === 1;
+            html += '<tr>';
+            for (let c = 0; c < row.cells.length; c++) {
+                const cell = row.cells[c];
+                let cellStyle = isAlt ? EMAIL_STYLES.tdAlt : EMAIL_STYLES.td;
+
+                // First column: room name (bold)
+                if (c === 0) {
+                    cellStyle += ' ' + EMAIL_STYLES.tdName;
+                    html += `<td style="${cellStyle}">${escapeHTML(cell.textContent.trim())}</td>`;
+                }
+                // Second column: m2
+                else if (c === 1) {
+                    const badge = cell.querySelector('.m2-badge');
+                    const badgeText = badge ? badge.textContent : cell.textContent.trim();
+                    html += `<td style="${cellStyle} text-align:center;"><span style="${EMAIL_STYLES.m2Badge}">${escapeHTML(badgeText)}</span></td>`;
+                }
+                // Third column: price
+                else {
+                    const priceVal = cell.querySelector('.price-value');
+                    const priceSuffix = cell.querySelector('.price-suffix');
+                    let priceHTML = '';
+                    if (priceVal) {
+                        priceHTML += `<span style="${EMAIL_STYLES.priceValue}">${escapeHTML(priceVal.textContent)}</span> `;
+                    }
+                    if (priceSuffix) {
+                        priceHTML += `<span style="${EMAIL_STYLES.priceSuffix}">${escapeHTML(priceSuffix.textContent)}</span>`;
+                    }
+                    if (!priceVal && !priceSuffix) {
+                        priceHTML = escapeHTML(cell.textContent.trim());
+                    }
+                    html += `<td style="${cellStyle}">${priceHTML}</td>`;
+                }
+            }
+            html += '</tr>';
+        }
+        html += '</tbody>';
+    }
+
+    html += '</table>';
+    return html;
+}
+
+function renderLounge(el) {
+    let inner = '';
+    for (const child of el.children) {
+        if (child.tagName === 'P') {
+            inner += `<p style="margin: 0 0 10px 0; font-size: 14px; line-height: 1.6;">${renderLoungeInline(child)}</p>`;
+        }
+    }
+    return `<div style="${EMAIL_STYLES.lounge}">${inner}</div>`;
+}
+
+function renderLoungeInline(el) {
+    let html = '';
+    for (const node of el.childNodes) {
+        if (node.nodeType === Node.TEXT_NODE) {
+            html += escapeHTML(node.textContent);
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.tagName === 'STRONG' || node.tagName === 'B') {
+                const inlineColor = node.style.color;
+                if (inlineColor && inlineColor.includes('danger')) {
+                    html += `<strong style="${EMAIL_STYLES.dangerText}">${renderLoungeInline(node)}</strong>`;
+                } else if (inlineColor) {
+                    html += `<strong style="font-weight:700; color:${inlineColor};">${renderLoungeInline(node)}</strong>`;
+                } else {
+                    html += `<strong style="${EMAIL_STYLES.loungeStrong}">${renderLoungeInline(node)}</strong>`;
+                }
+            } else if (node.tagName === 'BR') {
+                html += '<br>';
+            } else {
+                html += renderLoungeInline(node);
+            }
+        }
+    }
+    return html;
+}
+
+function renderInfoItem(el) {
+    return `<p style="${EMAIL_STYLES.infoItem}"><span style="${EMAIL_STYLES.bullet}">●</span> ${renderInline(el)}</p>`;
+}
+
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
 }
