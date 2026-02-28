@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Swissôtel Büyük Efes İzmir - Profesyonel Teklif Oluşturucu">
+    <title>Teklif V6 — Swissôtel Büyük Efes İzmir</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- ===== Header ===== -->
+    <header class="app-header">
+        <div class="header-inner">
+            <div class="logo-group">
+                <div class="logo-icon">🏨</div>
+                <div class="logo-text">
+                    <h1>Teklif <span>V6</span></h1>
+                    <p>Swissôtel Büyük Efes İzmir</p>
+                </div>
+            </div>
+            <nav class="tab-nav" id="tabNav">
+                <button class="tab-btn active" data-tab="tr" id="tab-tr">
+                    <span class="flag">🇹🇷</span> TR Teklif
+                </button>
+                <button class="tab-btn" data-tab="en" id="tab-en">
+                    <span class="flag">🇬🇧</span> ENG Offer
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== Main Content ===== -->
+    <main class="app-main">
+
+        <!-- ====== TR SECTION ====== -->
+        <section id="tr-section" class="tab-content active">
+            <div class="content-grid">
+
+                <!-- Proposal Letter -->
+                <div class="proposal-card">
+                    <div class="card-toolbar">
+                        <h2><span class="icon">📋</span> Teklif Metni</h2>
+                        <button class="copy-btn" id="trCopyBtn" title="Metni kopyala">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            <span>Kopyala</span>
+                        </button>
+                    </div>
+                    <div class="proposal-body" id="tr-proposal">
+                        <p>Merhabalar<span id="tr_nameSpan" class="dynamic-value"></span>,</p>
+                        <p>Öncelikle Swissôtel Büyük Efes İzmir'e gösterdiğiniz ilgiye çok teşekkür ederiz.</p>
+                        <p><span id="tr_girisDate" class="dynamic-value">x.x.25</span> giriş tarihli <span
+                                id="tr_cikisDate" class="dynamic-value">x.x.25</span> çıkış tarihli talebiniz için
+                            müsaitlik mevcut olup, konaklamanız için misafirlerimize öncelikle aşağıdaki oda tiplerini
+                            önerebiliriz.</p>
+
+                        <!-- Price Type Banners -->
+                        <div id="tr_nonrefSection" class="info-banner nonref">
+                            <span class="banner-icon">ℹ️</span> Size sunulan fiyatlar en uygun fiyatlardır ve ön
+                            ödemeli, iptal edilemeyen, iade edilemeyen ve değiştirilemeyen fiyatlardır. Fiyatlarımız
+                            sabit değildir, teklifimiz gün sonuna kadar geçerlidir.
+                        </div>
+                        <div id="tr_flexSection" class="info-banner flex">
+                            <span class="banner-icon">✅</span> Size sunulan fiyatlar, en uygun fiyatlardır ve giriş
+                            tarihinden bir gün öncesine kadar iptal, iade ve değişiklik yapılabilen fiyatlardır.
+                        </div>
+                        <div id="tr_corporateSection" class="info-banner corporate">
+                            <span class="banner-icon">🏢</span> Giriş gününe 24 saat kala (1 gün) iptal ve değişiklik
+                            hakkı mevcut, flexible(esnek) ve şirketinize özel fiyatlardır.
+                        </div>
+
+                        <div class="commission-note">
+                            Net fiyat üzerinden <strong>%10 komisyonunuz</strong> mevcuttur.<br>
+                            İkinci kişi farkı KDV hariç <strong>20 / 15 / 45 Euro</strong>'dur.
+                        </div>
+
+                        <!-- Table 1: Standard Rooms -->
+                        <table class="proposal-table">
+                            <thead>
+                                <tr>
+                                    <th>Oda ve Suit Tiplerimiz</th>
+                                    <th>m²</th>
+                                    <th>Tek Kişi (Tek Gece)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Klasik Cadde Manzaralı Oda</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="tr_priceKlasik" class="price-value">150</span> <span
+                                            class="price-suffix">EUR · %5 servis bedeli, %12 vergiler hariç, kahvaltı
+                                            dahil</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Advantage Bahçe Manzaralı Oda</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="tr_priceAdvantage" class="price-value">175</span> <span
+                                            class="price-suffix">EUR · %5 servis bedeli, %12 vergiler hariç, kahvaltı
+                                            dahil</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>Aşağıdaki odalar, klasik odalara göre konum olarak ana binaya daha yakındır. Odalarda hem duş
+                            hem de küvet mevcuttur. Süitlerde ise jakuzi özellikli küvet mevcuttur.</p>
+
+                        <div class="lounge-info">
+                            <p>Executive veya süit oda almanız halinde <strong>Executive Lounge</strong> hizmetinden
+                                ücretsiz faydalanabilirsiniz. <strong style="color:var(--color-danger);">8 yaş altı
+                                    çocuk kabul edilmemektedir.</strong></p>
+                            <p style="margin-top:10px;"><strong>Executive Lounge'da</strong> 07:00 – 10:00 arasında
+                                kahvaltı, 14:00 – 17:00 arasında çay saati, 18:00 – 20:00 saatlerinde ise yerli alkol ve
+                                alkolsüz içeceklerle birlikte 2 çeşit akşam yemeği büfesi mevcuttur.</p>
+                        </div>
+
+                        <!-- Table 2: Executive & Suites -->
+                        <table class="proposal-table">
+                            <thead>
+                                <tr>
+                                    <th>Oda ve Suit Tiplerimiz</th>
+                                    <th>m²</th>
+                                    <th>Tek Kişi (Tek Gece)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Executive Cadde Manzaralı Oda</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="tr_priceExecCadde" class="price-value">250</span> <span
+                                            class="price-suffix">EUR · %5 servis bedeli, %12 vergiler hariç, kahvaltı
+                                            dahil</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Executive Bahçe Manzaralı Oda</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="tr_priceExecBahce" class="price-value">285</span> <span
+                                            class="price-suffix">EUR · %5 servis bedeli, %12 vergiler hariç, kahvaltı
+                                            dahil</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Executive Deniz Manzaralı Oda</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="tr_priceExecDeniz" class="price-value">300</span> <span
+                                            class="price-suffix">EUR · %5 servis bedeli, %12 vergiler hariç, kahvaltı
+                                            dahil</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Business Suite Bahçe Manzaralı</td>
+                                    <td><span class="m2-badge">58 m²</span></td>
+                                    <td><span id="tr_priceBusinessBahce" class="price-value">425</span> <span
+                                            class="price-suffix">EUR · %5 servis bedeli, %12 vergiler hariç, kahvaltı
+                                            dahil</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Business Suite Deniz Manzaralı</td>
+                                    <td><span class="m2-badge">58 m²</span></td>
+                                    <td><span id="tr_priceBusinessDeniz" class="price-value">475</span> <span
+                                            class="price-suffix">EUR · %5 servis bedeli, %12 vergiler hariç, kahvaltı
+                                            dahil</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Executive Suite Deniz Manzaralı</td>
+                                    <td><span class="m2-badge">85 m²</span></td>
+                                    <td><span id="tr_priceExecSuiteDeniz" class="price-value">575</span> <span
+                                            class="price-suffix">EUR · %5 servis bedeli, %12 vergiler hariç, kahvaltı
+                                            dahil</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>Otelimizin fotoğraf galerisine <a href="https://www.swissotelbuyukefesizmir.com/gallery/"
+                                target="_blank" rel="noopener">swissotelbuyukefesizmir.com/gallery</a> linkinden
+                            ulaşabilirsiniz.</p>
+
+                        <div class="info-item">Yukarıda belirtilen oda fiyatlarına <strong>%2 konaklama
+                                vergisi</strong>, <strong>%10 KDV</strong>, <strong>5% servis bedeli gecelik</strong>
+                            olarak eklenecektir.</div>
+                        <div class="info-item">Otelimizde giriş saati <strong>14:00</strong>, çıkış saati
+                            <strong>12:00</strong>'dir. Erken giriş & geç çıkış talepleriniz otelimizin müsaitliği
+                            doğrultusunda gerçekleştirilecektir.</div>
+                        <div class="info-item">Olası ekstra harcamalarınız için giriş sırasında gecelik/oda başına
+                            <strong>€100 / 3.500 TRY</strong> kredi kartından ön provizyon ya da nakit olarak talep
+                            edilecektir.</div>
+                        <div class="info-item">Swissôtel Büyük Efes'te otopark hizmeti, konaklayan misafirlerimiz için
+                            ücrete tabidir. Otopark hizmeti için ek ücret <strong>günlük 7 Euro / 250 TRY</strong>'dir.
+                        </div>
+                        <div class="info-item">Rezervasyonlarınız henüz gerçekleştirilmemiş olup kesin rezervasyon için
+                            bilgilendirmenizi rica ederiz.</div>
+                        <div class="info-item">Yardımcı olabileceğimiz her konuda lütfen bizimle iletişime geçiniz.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Panel -->
+                <aside class="input-card">
+                    <div class="card-toolbar">
+                        <h2><span class="icon">⚙️</span> Bilgi Girişi</h2>
+                    </div>
+                    <div class="input-body">
+                        <div class="form-group">
+                            <label for="tr_isimInput">İsim</label>
+                            <input type="text" id="tr_isimInput" placeholder="Örn: Mert Bey">
+                        </div>
+                        <div class="form-group">
+                            <label for="tr_girisInput">Giriş Tarihi</label>
+                            <input type="text" id="tr_girisInput" placeholder="Örn: 11.04.2025">
+                        </div>
+                        <div class="form-group">
+                            <label for="tr_cikisInput">Çıkış Tarihi</label>
+                            <input type="text" id="tr_cikisInput" placeholder="Örn: 13.04.2025">
+                        </div>
+                        <div class="form-group">
+                            <label for="tr_fiyatInput">Baz Fiyat (EUR)</label>
+                            <input type="number" id="tr_fiyatInput" placeholder="Örn: 150" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="tr_fiyatType">Fiyat Türü</label>
+                            <select id="tr_fiyatType">
+                                <option value="">Seçiniz...</option>
+                                <option value="nonref">NONREF F5</option>
+                                <option value="flex">FLEX F5</option>
+                                <option value="corporate">CORPORATE</option>
+                            </select>
+                        </div>
+
+                        <hr class="panel-divider">
+
+                        <button type="button" id="tr_enableDiscountBtn" class="btn btn-success">
+                            💰 İndirimi Aktifleştir
+                        </button>
+
+                        <div class="discount-section" style="margin-top:16px;">
+                            <div class="section-label">📊 İndirim Ayarları</div>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label for="tr_discountInput">İndirim Oranı (%)</label>
+                                <input type="number" id="tr_discountInput" placeholder="Örn: 10" disabled>
+                            </div>
+                            <div class="section-label">Oda Baz Fiyatları</div>
+                            <div class="discount-prices">
+                                <input type="number" id="tr_priceInput1" placeholder="Klasik Cadde Manzaralı" disabled>
+                                <input type="number" id="tr_priceInput2" placeholder="Advantage Bahçe Manzaralı"
+                                    disabled>
+                                <input type="number" id="tr_priceInput3" placeholder="Executive Cadde Manzaralı"
+                                    disabled>
+                                <input type="number" id="tr_priceInput4" placeholder="Executive Bahçe Manzaralı"
+                                    disabled>
+                                <input type="number" id="tr_priceInput5" placeholder="Executive Deniz Manzaralı"
+                                    disabled>
+                                <input type="number" id="tr_priceInput6" placeholder="Business Suite Bahçe" disabled>
+                                <input type="number" id="tr_priceInput7" placeholder="Business Suite Deniz" disabled>
+                                <input type="number" id="tr_priceInput8" placeholder="Executive Suite Deniz" disabled>
+                            </div>
+                            <button type="button" id="tr_applyDiscountBtn" class="btn btn-primary"
+                                style="margin-top:14px;" disabled>
+                                ✨ İndirimli Fiyatları Uygula
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ====== EN SECTION ====== -->
+        <section id="en-section" class="tab-content">
+            <div class="content-grid">
+
+                <!-- Proposal Letter -->
+                <div class="proposal-card">
+                    <div class="card-toolbar">
+                        <h2><span class="icon">📋</span> Offer Letter</h2>
+                        <button class="copy-btn" id="enCopyBtn" title="Copy text">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                    <div class="proposal-body" id="en-proposal">
+                        <p>Good Day, Dear<span id="en_nameSpan" class="dynamic-value"></span>,</p>
+                        <p>First of all, we would like to thank you for your kind interest in Swissôtel Buyuk Efes,
+                            Izmir.</p>
+                        <p>We have availability for your request dated <span id="en_girisDate"
+                                class="dynamic-value">x.x.25</span> for check‑in on <span id="en_cikisDate"
+                                class="dynamic-value">x.x.25</span>. For your accommodation, we would like to kindly
+                            recommend the following room types.</p>
+
+                        <!-- Price Type Banners -->
+                        <div id="en_nonrefSection" class="info-banner nonref">
+                            <span class="banner-icon">ℹ️</span> The prices offered to you are the most affordable; these
+                            are the prices for which no cancellation, refund or change can be made. Our prices are not
+                            fixed, and our offer is valid until the end of the day.
+                        </div>
+                        <div id="en_flexSection" class="info-banner flex">
+                            <span class="banner-icon">✅</span> The prices offered to you are the most competitive rates
+                            and are cancellable, refundable, and changeable until one day prior to the check‑in date.
+                            Our prices are not fixed, and our offer is valid until the end of the day.
+                        </div>
+                        <div id="en_corporateSection" class="info-banner corporate">
+                            <span class="banner-icon">🏢</span> These are flexible and company‑specific prices, with the
+                            right to cancel until 16:00 on the day of arrival.
+                        </div>
+
+                        <div class="commission-note">
+                            The price difference for the second person is <strong>20 / 15 / 45 Euros</strong> excluding
+                            VAT.
+                        </div>
+
+                        <!-- Table 1: Standard Rooms -->
+                        <table class="proposal-table">
+                            <thead>
+                                <tr>
+                                    <th>Room and Suite Types</th>
+                                    <th>m²</th>
+                                    <th>One Person (Per Night)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Classic Street View Room</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="en_priceClassic" class="price-value">120</span> <span
+                                            class="price-suffix">EUR · %12 taxes, %5 service charge excluded, breakfast
+                                            included</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Classic Garden View Room</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="en_priceClassicGarden" class="price-value">145</span> <span
+                                            class="price-suffix">EUR · %12 taxes, %5 service charge excluded, breakfast
+                                            included</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>The rooms below are closer to the main building compared to the classic rooms. They feature
+                            both a shower and a bathtub. Suites come with a jacuzzi‑equipped bathtub.</p>
+
+                        <div class="lounge-info">
+                            <p>If you choose an Executive or Suite room, you can benefit from the <strong>Executive
+                                    Lounge</strong> service free of charge. <strong
+                                    style="color:var(--color-danger);">Children under 8 years of age are not
+                                    permitted.</strong></p>
+                            <p style="margin-top:10px;"><strong>Executive Lounge</strong> offers breakfast from 07:00 to
+                                10:00, tea time from 14:00 to 17:00, and in the evening from 18:00 to 20:00, with two
+                                types of dinner buffets available along with local alcoholic and non‑alcoholic
+                                beverages.</p>
+                        </div>
+
+                        <!-- Table 2: Executive & Suites -->
+                        <table class="proposal-table">
+                            <thead>
+                                <tr>
+                                    <th>Room and Suite Types</th>
+                                    <th>m²</th>
+                                    <th>One Person (Per Night)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Executive City View Room</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="en_priceExecCity" class="price-value">255</span> <span
+                                            class="price-suffix">EUR · %12 taxes, %5 service charge excluded, breakfast
+                                            included</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Executive Garden View Room</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="en_priceExecGarden" class="price-value">255</span> <span
+                                            class="price-suffix">EUR · %12 taxes, %5 service charge excluded, breakfast
+                                            included</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Executive Sea View Room</td>
+                                    <td><span class="m2-badge">27 m²</span></td>
+                                    <td><span id="en_priceExecSea" class="price-value">270</span> <span
+                                            class="price-suffix">EUR · %12 taxes, %5 service charge excluded, breakfast
+                                            included</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Business Suite Garden View</td>
+                                    <td><span class="m2-badge">58 m²</span></td>
+                                    <td><span id="en_priceBusinessGarden" class="price-value">395</span> <span
+                                            class="price-suffix">EUR · %12 taxes, %5 service charge excluded, breakfast
+                                            included</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Business Suite Sea View</td>
+                                    <td><span class="m2-badge">58 m²</span></td>
+                                    <td><span id="en_priceBusinessSea" class="price-value">445</span> <span
+                                            class="price-suffix">EUR · %12 taxes, %5 service charge excluded, breakfast
+                                            included</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Executive Suite Sea View</td>
+                                    <td><span class="m2-badge">85 m²</span></td>
+                                    <td><span id="en_priceExecSuite" class="price-value">545</span> <span
+                                            class="price-suffix">EUR · %12 taxes, %5 service charge excluded, breakfast
+                                            included</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p>Above given guest room rates are exclusive of <strong>%2 accommodation tax</strong>,
+                            <strong>10% VAT</strong>, <strong>5% service charge per day</strong>.</p>
+
+                        <div class="info-item">Our check‑in time is <strong>14:00</strong>, and check‑out time is
+                            <strong>12:00</strong>. Early check‑in requests will be accommodated based on the
+                            availability of our hotel.</div>
+                        <div class="info-item">During check‑in, a pre‑authorization of <strong>€100 / 3,500 TRY per
+                                night/room</strong> will be requested on your credit card or in cash for possible
+                            additional expenses.</div>
+                        <div class="info-item">The parking service at Swissôtel Buyuk Efes is available for a fee for
+                            our staying guests. The daily charge for the parking service is <strong>7 Euros / 250
+                                TRY</strong>.</div>
+                        <div class="info-item">You can access our hotel's photo gallery from: <a
+                                href="https://www.swissotelbuyukefesizmir.com/gallery/" target="_blank"
+                                rel="noopener">swissotelbuyukefesizmir.com/gallery</a></div>
+                        <div class="info-item">Your reservations have not been made yet and will be made based on your
+                            approval.</div>
+                        <div class="info-item">We are waiting for your reply.</div>
+                    </div>
+                </div>
+
+                <!-- Input Panel -->
+                <aside class="input-card">
+                    <div class="card-toolbar">
+                        <h2><span class="icon">⚙️</span> Enter Information</h2>
+                    </div>
+                    <div class="input-body">
+                        <div class="form-group">
+                            <label for="en_nameInput">Name</label>
+                            <input type="text" id="en_nameInput" placeholder="e.g., Mr. Smith">
+                        </div>
+                        <div class="form-group">
+                            <label for="en_checkinInput">Check-in Date</label>
+                            <input type="text" id="en_checkinInput" placeholder="e.g., 11.04.2025">
+                        </div>
+                        <div class="form-group">
+                            <label for="en_checkoutInput">Check-out Date</label>
+                            <input type="text" id="en_checkoutInput" placeholder="e.g., 13.04.2025">
+                        </div>
+                        <div class="form-group">
+                            <label for="en_priceInput">Base Price (EUR)</label>
+                            <input type="number" id="en_priceInput" placeholder="e.g., 120" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="en_priceType">Price Type</label>
+                            <select id="en_priceType">
+                                <option value="">Select...</option>
+                                <option value="nonref">NONREF F5</option>
+                                <option value="flex">FLEX F5</option>
+                                <option value="corporate">CORPORATE</option>
+                            </select>
+                        </div>
+
+                        <hr class="panel-divider">
+
+                        <button type="button" id="en_enableDiscountBtn" class="btn btn-success">
+                            💰 Enable Discount
+                        </button>
+
+                        <div class="discount-section" style="margin-top:16px;">
+                            <div class="section-label">📊 Discount Settings</div>
+                            <div class="form-group" style="margin-bottom:12px;">
+                                <label for="en_discountInput">Discount Rate (%)</label>
+                                <input type="number" id="en_discountInput" placeholder="e.g., 10" disabled>
+                            </div>
+                            <div class="section-label">Room Base Prices</div>
+                            <div class="discount-prices">
+                                <input type="number" id="en_priceInput1" placeholder="Classic Street View Room"
+                                    disabled>
+                                <input type="number" id="en_priceInput2" placeholder="Classic Garden View Room"
+                                    disabled>
+                                <input type="number" id="en_priceInput3" placeholder="Executive City View Room"
+                                    disabled>
+                                <input type="number" id="en_priceInput4" placeholder="Executive Garden View Room"
+                                    disabled>
+                                <input type="number" id="en_priceInput5" placeholder="Executive Sea View Room" disabled>
+                                <input type="number" id="en_priceInput6" placeholder="Business Suite Garden View"
+                                    disabled>
+                                <input type="number" id="en_priceInput7" placeholder="Business Suite Sea View" disabled>
+                                <input type="number" id="en_priceInput8" placeholder="Executive Suite Sea View"
+                                    disabled>
+                            </div>
+                            <button type="button" id="en_applyDiscountBtn" class="btn btn-primary"
+                                style="margin-top:14px;" disabled>
+                                ✨ Apply Discounted Prices
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <span>Reservation Office</span>
+            <span class="dot"></span>
+            <span>Mert Ç.</span>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
