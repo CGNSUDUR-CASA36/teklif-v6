@@ -3,12 +3,96 @@
    Swissôtel Büyük Efes İzmir
    ============================================== */
 
+// SHA-256 hash of the password (password is NOT stored in plaintext)
+const AUTH_HASH = '20c0011102ebd410719d237fdf3f6592d49bb973c320bc3d49e70a8f4f2fcc2b';
+const AUTH_KEY = 'teklif_v6_auth';
+
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if already authenticated this session
+    if (sessionStorage.getItem(AUTH_KEY) === AUTH_HASH) {
+        unlockApp();
+    } else {
+        showLogin();
+    }
+});
+
+// ====== AUTHENTICATION ======
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function showLogin() {
+    const overlay = document.getElementById('loginOverlay');
+    const loginBtn = document.getElementById('loginBtn');
+    const pwInput = document.getElementById('loginPassword');
+    const errorEl = document.getElementById('loginError');
+    const toggleBtn = document.getElementById('togglePassword');
+
+    // Hide main app
+    document.querySelector('.app-header').classList.add('auth-hidden');
+    document.querySelector('.app-main').classList.add('auth-hidden');
+    document.querySelector('.app-footer').classList.add('auth-hidden');
+    overlay.classList.remove('hidden');
+
+    // Focus password field
+    setTimeout(() => pwInput.focus(), 300);
+
+    // Login handler
+    async function attemptLogin() {
+        const pw = pwInput.value;
+        if (!pw) return;
+
+        const hash = await sha256(pw);
+        if (hash === AUTH_HASH) {
+            // Success
+            sessionStorage.setItem(AUTH_KEY, AUTH_HASH);
+            errorEl.classList.remove('visible');
+            overlay.classList.add('hidden');
+            setTimeout(() => {
+                unlockApp();
+            }, 500);
+        } else {
+            // Wrong password
+            errorEl.classList.remove('visible');
+            void errorEl.offsetWidth; // Force reflow for animation restart
+            errorEl.classList.add('visible');
+            pwInput.value = '';
+            pwInput.focus();
+        }
+    }
+
+    loginBtn.addEventListener('click', attemptLogin);
+    pwInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') attemptLogin();
+    });
+
+    // Toggle password visibility
+    let pwVisible = false;
+    toggleBtn.addEventListener('click', () => {
+        pwVisible = !pwVisible;
+        pwInput.type = pwVisible ? 'text' : 'password';
+        toggleBtn.innerHTML = pwVisible
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    });
+}
+
+function unlockApp() {
+    const overlay = document.getElementById('loginOverlay');
+    overlay.classList.add('hidden');
+    document.querySelector('.app-header').classList.remove('auth-hidden');
+    document.querySelector('.app-main').classList.remove('auth-hidden');
+    document.querySelector('.app-footer').classList.remove('auth-hidden');
+
+    // Initialize app
     initTabs();
     initTR();
     initEN();
     initCopyButtons();
-});
+}
 
 // ====== TOAST ======
 function showToast(message, type = 'info') {
