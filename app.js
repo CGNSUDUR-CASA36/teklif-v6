@@ -3,13 +3,15 @@
    Swissôtel Büyük Efes İzmir
    ============================================== */
 
-// SHA-256 hash of the password (password is NOT stored in plaintext)
+// SHA-256 hashes (passwords are NOT stored in plaintext)
 const AUTH_HASH = '20c0011102ebd410719d237fdf3f6592d49bb973c320bc3d49e70a8f4f2fcc2b';
+const ADMIN_HASH = '77d35085133ce0628a6afb89d5b33f70bfbf2430befc3a22a4becdefa3be4b8f';
 const AUTH_KEY = 'teklif_v6_auth';
+const CONFIG_KEY = 'teklif_v6_config';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check if already authenticated this session
-    if (sessionStorage.getItem(AUTH_KEY) === AUTH_HASH) {
+    if (sessionStorage.getItem(AUTH_KEY) === AUTH_HASH || sessionStorage.getItem(AUTH_KEY) === ADMIN_HASH) {
         unlockApp();
     } else {
         showLogin();
@@ -46,8 +48,16 @@ function showLogin() {
         if (!pw) return;
 
         const hash = await sha256(pw);
+
+        if (hash === ADMIN_HASH) {
+            // Admin login → redirect to admin panel
+            sessionStorage.setItem(AUTH_KEY, ADMIN_HASH);
+            window.location.href = 'admin.html';
+            return;
+        }
+
         if (hash === AUTH_HASH) {
-            // Success
+            // Normal user login
             sessionStorage.setItem(AUTH_KEY, AUTH_HASH);
             errorEl.classList.remove('visible');
             overlay.classList.add('hidden');
@@ -87,11 +97,114 @@ function unlockApp() {
     document.querySelector('.app-main').classList.remove('auth-hidden');
     document.querySelector('.app-footer').classList.remove('auth-hidden');
 
-    // Initialize app
+    // Load admin config then initialize
+    loadAdminConfig();
     initTabs();
     initTR();
     initEN();
     initCopyButtons();
+}
+
+// ====== LOAD ADMIN CONFIG ======
+function loadAdminConfig() {
+    const saved = localStorage.getItem(CONFIG_KEY);
+    if (!saved) return;
+    try {
+        const cfg = JSON.parse(saved);
+
+        // Apply room names and m² to TR tables
+        const trTable1Rows = document.querySelectorAll('#tr-section .proposal-table:nth-of-type(1) tbody tr');
+        const trTable2Rows = document.querySelectorAll('#tr-section .proposal-table:nth-of-type(2) tbody tr');
+        const trAllRows = [...(trTable1Rows || []), ...(trTable2Rows || [])];
+
+        // Get all TR table rows directly
+        const trTables = document.querySelectorAll('#tr-section .proposal-table');
+        let trRowIndex = 0;
+        trTables.forEach(table => {
+            table.querySelectorAll('tbody tr').forEach(row => {
+                trRowIndex++;
+                const nameKey = 'cfg_tr_room' + trRowIndex;
+                const m2Key = 'cfg_tr_m2_' + trRowIndex;
+                if (cfg[nameKey]) {
+                    const nameCell = row.querySelector('td:first-child');
+                    if (nameCell) nameCell.textContent = cfg[nameKey];
+                }
+                if (cfg[m2Key]) {
+                    const m2Badge = row.querySelector('.m2-badge');
+                    if (m2Badge) m2Badge.textContent = cfg[m2Key] + ' m²';
+                }
+            });
+        });
+
+        // Get all EN table rows
+        const enTables = document.querySelectorAll('#en-section .proposal-table');
+        let enRowIndex = 0;
+        enTables.forEach(table => {
+            table.querySelectorAll('tbody tr').forEach(row => {
+                enRowIndex++;
+                const nameKey = 'cfg_en_room' + enRowIndex;
+                const m2Key = 'cfg_en_m2_' + enRowIndex;
+                if (cfg[nameKey]) {
+                    const nameCell = row.querySelector('td:first-child');
+                    if (nameCell) nameCell.textContent = cfg[nameKey];
+                }
+                if (cfg[m2Key]) {
+                    const m2Badge = row.querySelector('.m2-badge');
+                    if (m2Badge) m2Badge.textContent = cfg[m2Key] + ' m²';
+                }
+            });
+        });
+
+        // Apply price type texts
+        if (cfg.cfg_nonref_tr) {
+            const el = document.getElementById('tr_nonrefSection');
+            if (el) el.textContent = cfg.cfg_nonref_tr;
+        }
+        if (cfg.cfg_flex_tr) {
+            const el = document.getElementById('tr_flexSection');
+            if (el) el.textContent = cfg.cfg_flex_tr;
+        }
+        if (cfg.cfg_corporate_tr) {
+            const el = document.getElementById('tr_corporateSection');
+            if (el) el.textContent = cfg.cfg_corporate_tr;
+        }
+        if (cfg.cfg_nonref_en) {
+            const el = document.getElementById('en_nonrefSection');
+            if (el) el.textContent = cfg.cfg_nonref_en;
+        }
+        if (cfg.cfg_flex_en) {
+            const el = document.getElementById('en_flexSection');
+            if (el) el.textContent = cfg.cfg_flex_en;
+        }
+        if (cfg.cfg_corporate_en) {
+            const el = document.getElementById('en_corporateSection');
+            if (el) el.textContent = cfg.cfg_corporate_en;
+        }
+
+    } catch (e) {
+        console.warn('Config load error:', e);
+    }
+}
+
+// Get configured price additions (from admin or defaults)
+function getConfiguredAdditions() {
+    const defaults = [0, 25, 100, 135, 150, 275, 325, 425];
+    const saved = localStorage.getItem(CONFIG_KEY);
+    if (!saved) return { tr: defaults, en: defaults };
+    try {
+        const cfg = JSON.parse(saved);
+        const tr = defaults.map((d, i) => {
+            const key = 'cfg_tr_add' + (i + 1);
+            return cfg[key] !== undefined ? parseFloat(cfg[key]) : d;
+        });
+        const en = defaults.map((d, i) => {
+            const key = 'cfg_en_add' + (i + 1);
+            return cfg[key] !== undefined ? parseFloat(cfg[key]) : d;
+        });
+        return { tr, en };
+    } catch (e) {
+        return { tr: defaults, en: defaults };
+    }
 }
 
 // ====== TOAST ======
@@ -152,7 +265,7 @@ function initTR() {
         document.getElementById('tr_priceExecSuiteDeniz')
     ];
 
-    const priceAdditions = [0, 25, 100, 135, 150, 275, 325, 425];
+    const priceAdditions = getConfiguredAdditions().tr;
 
     const enableDiscountBtn = document.getElementById('tr_enableDiscountBtn');
     const discountInput = document.getElementById('tr_discountInput');
@@ -272,7 +385,7 @@ function initEN() {
         document.getElementById('en_priceExecSuite')
     ];
 
-    const priceAdditions = [0, 25, 100, 135, 150, 275, 325, 425];
+    const priceAdditions = getConfiguredAdditions().en;
 
     const enableDiscountBtn = document.getElementById('en_enableDiscountBtn');
     const discountInput = document.getElementById('en_discountInput');

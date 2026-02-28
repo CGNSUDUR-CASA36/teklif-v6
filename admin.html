@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel — Teklif V6</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Admin-specific styles */
+        body {
+            background: var(--bg-main);
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #0f1620, #1a2332);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--color-accent);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-header .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .admin-header .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+
+        .admin-header h1 {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .admin-header h1 span {
+            color: var(--color-accent);
+        }
+
+        .admin-header .badge {
+            background: var(--color-danger);
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .admin-header .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-sm);
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .admin-header .back-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .admin-header .back-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .admin-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        .admin-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+        }
+
+        .admin-section-header {
+            padding: 18px 24px;
+            background: var(--bg-input);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-section-header h2 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .admin-section-header .section-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .admin-section-body {
+            padding: 24px;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .admin-grid-wide {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .admin-field label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .admin-field input,
+        .admin-field textarea {
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .admin-field textarea {
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .admin-field input:focus,
+        .admin-field textarea:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px var(--color-accent-glow);
+        }
+
+        .admin-field .field-hint {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .admin-room-row {
+            display: grid;
+            grid-template-columns: 2fr 80px 100px;
+            gap: 12px;
+            align-items: end;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .admin-room-row:last-child {
+            border-bottom: none;
+        }
+
+        .admin-actions {
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border-light);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+        }
+
+        .admin-actions .save-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(200, 165, 90, 0.25);
+        }
+
+        .admin-actions .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(200, 165, 90, 0.35);
+        }
+
+        .admin-actions .save-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .admin-actions .reset-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1.5px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .admin-actions .reset-btn:hover {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .save-toast {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            padding: 14px 24px;
+            background: var(--color-success);
+            color: #fff;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-xl);
+            transform: translateX(120%);
+            transition: transform 0.35s ease;
+            z-index: 9999;
+        }
+
+        .save-toast.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 640px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-room-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .admin-actions {
+                flex-direction: column;
+            }
+
+            .admin-header {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="logo-group">
+            <div class="logo-icon">🛡️</div>
+            <div>
+                <h1>Teklif <span>V6</span> Admin</h1>
+            </div>
+            <span class="badge">Admin</span>
+        </div>
+        <a href="index.html" class="back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+            </svg>
+            Ana Sayfaya Dön
+        </a>
+    </header>
+
+    <div class="admin-container">
+
+        <!-- Oda Tipleri TR -->
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <div class="section-icon">🏨</div>
+                <h2>Oda Tipleri — Türkçe</h2>
+            </div>
+            <div class="admin-section-body">
+                <div class="admin-room-row"
+                    style="font-weight:600; font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid var(--border-light);">
+                    <span>Oda Adı</span>
+                    <span>m²</span>
+                    <span>Fiyat Farkı (€)</span>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_tr_room1" value="Klasik Cadde Manzaralı Oda">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_tr_m2_1" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_tr_add1" value="0"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_tr_room2" value="Advantage Bahçe Manzaralı Oda">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_tr_m2_2" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_tr_add2" value="25"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_tr_room3" value="Executive Cadde Manzaralı Oda">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_tr_m2_3" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_tr_add3" value="100"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_tr_room4" value="Executive Bahçe Manzaralı Oda">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_tr_m2_4" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_tr_add4" value="135"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_tr_room5" value="Executive Deniz Manzaralı Oda">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_tr_m2_5" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_tr_add5" value="150"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_tr_room6"
+                            value="Business Suite Bahçe Manzaralı"></div>
+                    <div class="admin-field"><input type="text" id="cfg_tr_m2_6" value="58"></div>
+                    <div class="admin-field"><input type="number" id="cfg_tr_add6" value="275"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_tr_room7"
+                            value="Business Suite Deniz Manzaralı"></div>
+                    <div class="admin-field"><input type="text" id="cfg_tr_m2_7" value="58"></div>
+                    <div class="admin-field"><input type="number" id="cfg_tr_add7" value="325"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_tr_room8"
+                            value="Executive Suite Deniz Manzaralı"></div>
+                    <div class="admin-field"><input type="text" id="cfg_tr_m2_8" value="85"></div>
+                    <div class="admin-field"><input type="number" id="cfg_tr_add8" value="425"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Oda Tipleri EN -->
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <div class="section-icon">🌍</div>
+                <h2>Room Types — English</h2>
+            </div>
+            <div class="admin-section-body">
+                <div class="admin-room-row"
+                    style="font-weight:600; font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid var(--border-light);">
+                    <span>Room Name</span>
+                    <span>m²</span>
+                    <span>Price Diff (€)</span>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_en_room1" value="Classic Street View Room">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_en_m2_1" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_en_add1" value="0"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_en_room2" value="Classic Garden View Room">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_en_m2_2" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_en_add2" value="25"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_en_room3" value="Executive City View Room">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_en_m2_3" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_en_add3" value="100"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_en_room4" value="Executive Garden View Room">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_en_m2_4" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_en_add4" value="135"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_en_room5" value="Executive Sea View Room"></div>
+                    <div class="admin-field"><input type="text" id="cfg_en_m2_5" value="27"></div>
+                    <div class="admin-field"><input type="number" id="cfg_en_add5" value="150"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_en_room6" value="Business Suite Garden View">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_en_m2_6" value="58"></div>
+                    <div class="admin-field"><input type="number" id="cfg_en_add6" value="275"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_en_room7" value="Business Suite Sea View"></div>
+                    <div class="admin-field"><input type="text" id="cfg_en_m2_7" value="58"></div>
+                    <div class="admin-field"><input type="number" id="cfg_en_add7" value="325"></div>
+                </div>
+                <div class="admin-room-row">
+                    <div class="admin-field"><input type="text" id="cfg_en_room8" value="Executive Suite Sea View">
+                    </div>
+                    <div class="admin-field"><input type="text" id="cfg_en_m2_8" value="85"></div>
+                    <div class="admin-field"><input type="number" id="cfg_en_add8" value="425"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Komisyon & Vergiler -->
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <div class="section-icon">💰</div>
+                <h2>Komisyon & Vergiler</h2>
+            </div>
+            <div class="admin-section-body">
+                <div class="admin-grid">
+                    <div class="admin-field">
+                        <label>Komisyon Oranı (%)</label>
+                        <input type="number" id="cfg_commission" value="10">
+                    </div>
+                    <div class="admin-field">
+                        <label>2. Kişi Farkı (Cadde/Bahçe/Deniz EUR)</label>
+                        <input type="text" id="cfg_secondPerson" value="20 / 15 / 45">
+                    </div>
+                    <div class="admin-field">
+                        <label>KDV (%)</label>
+                        <input type="number" id="cfg_vat" value="10">
+                    </div>
+                    <div class="admin-field">
+                        <label>Konaklama Vergisi (%)</label>
+                        <input type="number" id="cfg_accTax" value="2">
+                    </div>
+                    <div class="admin-field">
+                        <label>Servis Bedeli (%)</label>
+                        <input type="number" id="cfg_service" value="5">
+                    </div>
+                    <div class="admin-field">
+                        <label>Depozito (EUR / TRY)</label>
+                        <input type="text" id="cfg_deposit" value="€100 / 3.500 TRY">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Otel Bilgileri -->
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <div class="section-icon">🏢</div>
+                <h2>Otel Bilgileri</h2>
+            </div>
+            <div class="admin-section-body">
+                <div class="admin-grid">
+                    <div class="admin-field">
+                        <label>Check-in Saati</label>
+                        <input type="text" id="cfg_checkin" value="14:00">
+                    </div>
+                    <div class="admin-field">
+                        <label>Check-out Saati</label>
+                        <input type="text" id="cfg_checkout" value="12:00">
+                    </div>
+                    <div class="admin-field">
+                        <label>Otopark Ücreti (EUR / TRY)</label>
+                        <input type="text" id="cfg_parking" value="7 Euro / 250 TRY">
+                    </div>
+                    <div class="admin-field">
+                        <label>Galeri Linki</label>
+                        <input type="url" id="cfg_gallery" value="https://www.swissotelbuyukefesizmir.com/gallery/">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Executive Lounge -->
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <div class="section-icon">☕</div>
+                <h2>Executive Lounge Bilgileri</h2>
+            </div>
+            <div class="admin-section-body">
+                <div class="admin-grid">
+                    <div class="admin-field">
+                        <label>Kahvaltı Saatleri</label>
+                        <input type="text" id="cfg_lounge_breakfast" value="07:00 – 10:00">
+                    </div>
+                    <div class="admin-field">
+                        <label>Çay Saati</label>
+                        <input type="text" id="cfg_lounge_tea" value="14:00 – 17:00">
+                    </div>
+                    <div class="admin-field">
+                        <label>Akşam Büfe Saatleri</label>
+                        <input type="text" id="cfg_lounge_dinner" value="18:00 – 20:00">
+                    </div>
+                    <div class="admin-field">
+                        <label>Yaş Sınırı</label>
+                        <input type="number" id="cfg_lounge_age" value="8">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fiyat Türü Metinleri -->
+        <div class="admin-section">
+            <div class="admin-section-header">
+                <div class="section-icon">📝</div>
+                <h2>Fiyat Türü Açıklamaları</h2>
+            </div>
+            <div class="admin-section-body">
+                <div class="admin-grid admin-grid-wide">
+                    <div class="admin-field">
+                        <label>NONREF — Türkçe</label>
+                        <textarea
+                            id="cfg_nonref_tr">Size sunulan fiyatlar en uygun fiyatlardır ve ön ödemeli, iptal edilemeyen, iade edilemeyen ve değiştirilemeyen fiyatlardır. Fiyatlarımız sabit değildir, teklifimiz gün sonuna kadar geçerlidir.</textarea>
+                    </div>
+                    <div class="admin-field">
+                        <label>NONREF — English</label>
+                        <textarea
+                            id="cfg_nonref_en">The prices offered to you are the most affordable; these are the prices for which no cancellation, refund or change can be made. Our prices are not fixed, and our offer is valid until the end of the day.</textarea>
+                    </div>
+                    <div class="admin-field">
+                        <label>FLEX — Türkçe</label>
+                        <textarea
+                            id="cfg_flex_tr">Size sunulan fiyatlar, en uygun fiyatlardır ve giriş tarihinden bir gün öncesine kadar iptal, iade ve değişiklik yapılabilen fiyatlardır.</textarea>
+                    </div>
+                    <div class="admin-field">
+                        <label>FLEX — English</label>
+                        <textarea
+                            id="cfg_flex_en">The prices offered to you are the most competitive rates and are cancellable, refundable, and changeable until one day prior to the check‑in date. Our prices are not fixed, and our offer is valid until the end of the day.</textarea>
+                    </div>
+                    <div class="admin-field">
+                        <label>CORPORATE — Türkçe</label>
+                        <textarea
+                            id="cfg_corporate_tr">Giriş gününe 24 saat kala (1 gün) iptal ve değişiklik hakkı mevcut, flexible(esnek) ve şirketinize özel fiyatlardır.</textarea>
+                    </div>
+                    <div class="admin-field">
+                        <label>CORPORATE — English</label>
+                        <textarea
+                            id="cfg_corporate_en">These are flexible and company‑specific prices, with the right to cancel until 16:00 on the day of arrival.</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Actions Bar -->
+    <div class="admin-actions">
+        <button class="reset-btn" id="resetBtn">Varsayılana Sıfırla</button>
+        <button class="save-btn" id="saveBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                <polyline points="17 21 17 13 7 13 7 21" />
+                <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Kaydet & Uygula
+        </button>
+    </div>
+
+    <!-- Save Toast -->
+    <div class="save-toast" id="saveToast">✅ Ayarlar kaydedildi!</div>
+
+    <script>
+        const CONFIG_KEY = 'teklif_v6_config';
+
+        // All configurable field IDs
+        const FIELDS = [
+            // TR rooms
+            'cfg_tr_room1', 'cfg_tr_room2', 'cfg_tr_room3', 'cfg_tr_room4',
+            'cfg_tr_room5', 'cfg_tr_room6', 'cfg_tr_room7', 'cfg_tr_room8',
+            'cfg_tr_m2_1', 'cfg_tr_m2_2', 'cfg_tr_m2_3', 'cfg_tr_m2_4',
+            'cfg_tr_m2_5', 'cfg_tr_m2_6', 'cfg_tr_m2_7', 'cfg_tr_m2_8',
+            'cfg_tr_add1', 'cfg_tr_add2', 'cfg_tr_add3', 'cfg_tr_add4',
+            'cfg_tr_add5', 'cfg_tr_add6', 'cfg_tr_add7', 'cfg_tr_add8',
+            // EN rooms
+            'cfg_en_room1', 'cfg_en_room2', 'cfg_en_room3', 'cfg_en_room4',
+            'cfg_en_room5', 'cfg_en_room6', 'cfg_en_room7', 'cfg_en_room8',
+            'cfg_en_m2_1', 'cfg_en_m2_2', 'cfg_en_m2_3', 'cfg_en_m2_4',
+            'cfg_en_m2_5', 'cfg_en_m2_6', 'cfg_en_m2_7', 'cfg_en_m2_8',
+            'cfg_en_add1', 'cfg_en_add2', 'cfg_en_add3', 'cfg_en_add4',
+            'cfg_en_add5', 'cfg_en_add6', 'cfg_en_add7', 'cfg_en_add8',
+            // Commission & taxes
+            'cfg_commission', 'cfg_secondPerson', 'cfg_vat', 'cfg_accTax',
+            'cfg_service', 'cfg_deposit',
+            // Hotel info
+            'cfg_checkin', 'cfg_checkout', 'cfg_parking', 'cfg_gallery',
+            // Lounge
+            'cfg_lounge_breakfast', 'cfg_lounge_tea', 'cfg_lounge_dinner', 'cfg_lounge_age',
+            // Price type texts
+            'cfg_nonref_tr', 'cfg_nonref_en', 'cfg_flex_tr', 'cfg_flex_en',
+            'cfg_corporate_tr', 'cfg_corporate_en'
+        ];
+
+        // Load saved config
+        function loadConfig() {
+            const saved = localStorage.getItem(CONFIG_KEY);
+            if (!saved) return;
+            try {
+                const config = JSON.parse(saved);
+                FIELDS.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && config[id] !== undefined) {
+                        el.value = config[id];
+                    }
+                });
+            } catch (e) { }
+        }
+
+        // Save config
+        function saveConfig() {
+            const config = {};
+            FIELDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) config[id] = el.value;
+            });
+            localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+
+            // Show toast
+            const toast = document.getElementById('saveToast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        // Reset to defaults
+        function resetConfig() {
+            if (confirm('Tüm ayarlar varsayılan değerlere sıfırlanacak. Emin misiniz?')) {
+                localStorage.removeItem(CONFIG_KEY);
+                location.reload();
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadConfig();
+            document.getElementById('saveBtn').addEventListener('click', saveConfig);
+            document.getElementById('resetBtn').addEventListener('click', resetConfig);
+        });
+    </script>
+
+</body>
+
+</html>
